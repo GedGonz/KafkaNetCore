@@ -28,12 +28,9 @@ namespace Core.Kafka
                 {
                     Key = rnd.Next(5).ToString(),
                     Value = message
-                });;
+                });
             }
-
-            
-
-            
+                        
         }
     }
 }

@@ -35,12 +35,16 @@ namespace Orders
         private static Task[] ListeningTopic( CancellationToken token) 
         {
             var config = Configure();
+
+            var _topic =config.GetSection("topic").Value;
+
             var _consumer = new Consumer<string, string>(config.GetToption<KafkaOprtions>("kafka"));
+
 
             _consumer.OnMessageConsumed += MessageConsumed;
 
             Task[] consumers = {
-                _consumer.Consume("order",token)
+                _consumer.Consume(_topic,token)
             };
 
             return consumers;

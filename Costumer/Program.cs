@@ -18,8 +18,8 @@ namespace Costumer
             Console.WriteLine("=====================================");
             Console.WriteLine("Welcome to app Costumers: ");
 
-
-           await PublishOrder("order");
+           
+            await PublishOrder();
         }
         private static IConfigurationRoot Configure() 
         {
@@ -32,12 +32,12 @@ namespace Costumer
             return config;
         }
 
-        private static async Task PublishOrder(string topic)
+        private static async Task PublishOrder()
         {
             var order = 0;
-            Configure();
+            var config=Configure();
 
-            
+            var _topic = config.GetSection("topic").Value;
 
             while (order != 6)
             {
@@ -61,7 +61,7 @@ namespace Costumer
 
                     Console.WriteLine($"YOUR {type.ToString()} ORDER HAS BEEN SHIPPED!");
 
-                    await _publisher.Publish(type, topic);
+                    await _publisher.Publish(type, _topic);
 
                     Thread.Sleep(1000);
                     Console.Clear();
