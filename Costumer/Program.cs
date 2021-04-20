@@ -15,9 +15,8 @@ namespace Costumer
         private static Publisher _publisher;
         static async Task Main(string[] args)
         {
-            Console.WriteLine("==========================");
+            Console.WriteLine("=====================================");
             Console.WriteLine("Welcome to app Costumers: ");
-            Console.WriteLine("==========================");
 
 
            await PublishOrder("order");
@@ -35,17 +34,41 @@ namespace Costumer
 
         private static async Task PublishOrder(string topic)
         {
-            var order = string.Empty;
+            var order = 0;
             Configure();
-            while(order != "q") {
 
-                Console.WriteLine("Please digit to Order: ");
-                order = Console.ReadLine();
+            
 
-                await _publisher.Publish(order, topic);
+            while (order != 6)
+            {
+                Console.WriteLine("=====================================");
+                Console.WriteLine("================MENU=================");
+                Console.WriteLine("=====================================");
+                Console.WriteLine("0--------> DONUTS--------------------");
+                Console.WriteLine("1--------> BURGER--------------------");
+                Console.WriteLine("2--------> SANDWICH------------------");
+                Console.WriteLine("3--------> MEXICAN TACOS-------------");
+                Console.WriteLine("4--------> CHICKEN NUGGETS-----------");
+                Console.WriteLine("5--------> EXIT MENU-----------------");
+                Console.WriteLine("=====================================");
 
-                Thread.Sleep(1000);
-            }
+                Console.WriteLine("SELECT YOUR ORDER PLEASE: ");
+                order = int.Parse(Console.ReadLine());
+                
+                if (order!=5)
+                {
+                    var type = (Orderstypes.ORDER)order;
+
+                    Console.WriteLine($"YOUR {type.ToString()} ORDER HAS BEEN SHIPPED!");
+
+                    await _publisher.Publish(type, topic);
+
+                    Thread.Sleep(1000);
+                    Console.Clear();
+                }
+                
+
+            } 
            
 
         }

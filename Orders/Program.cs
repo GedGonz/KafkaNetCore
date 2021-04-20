@@ -15,7 +15,8 @@ namespace Orders
             CancellationTokenSource source = new CancellationTokenSource();
 
             Console.WriteLine("==========================");
-            Console.WriteLine("Welcome to admin Orders: ");
+            Console.WriteLine("WELCOME TO ADMIN ORDERS");
+            Console.WriteLine("LIST ORDERS");
             Console.WriteLine("==========================");
 
             ListeningTopic(source.Token);
@@ -49,7 +50,10 @@ namespace Orders
 
             var task  = Task.Factory.StartNew(() =>
             {
-                Console.WriteLine($"Enter order: {message.Value}");
+                var Order = (Orderstypes.ORDER)(int.Parse(message.Value));
+
+                Console.WriteLine($"YOUR {Order.ToString()} ORDER HAS BEEN RECEIVED");
+
             });
 
             return task;
