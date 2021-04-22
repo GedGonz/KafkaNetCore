@@ -18,7 +18,7 @@ namespace Costumer
             Console.WriteLine("=====================================");
             Console.WriteLine("Welcome to app Costumers: ");
 
-           
+            Console.ReadLine();
             await PublishOrder();
         }
         private static IConfigurationRoot Configure() 
@@ -34,6 +34,9 @@ namespace Costumer
 
         private static async Task PublishOrder()
         {
+          
+
+            
             var order = 0;
             var config=Configure();
 
@@ -52,9 +55,9 @@ namespace Costumer
                 Console.WriteLine("5--------> EXIT MENU-----------------");
                 Console.WriteLine("=====================================");
 
-                Console.WriteLine("SELECT YOUR ORDER PLEASE: ");
-                order = int.Parse(Console.ReadLine());
-                
+                    Console.WriteLine("SELECT YOUR ORDER PLEASE: ");
+                    order = int.Parse(Console.ReadLine());
+
                 if (order!=5)
                 {
                     var type = (Orderstypes.ORDER)order;
@@ -68,9 +71,9 @@ namespace Costumer
                 }
                 
 
-            } 
-           
+            }
 
+            
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Orders
             Console.WriteLine("WELCOME TO ADMIN ORDERS");
             Console.WriteLine("LIST ORDERS");
             Console.WriteLine("==========================");
-
+            Console.ReadLine();
             ListeningTopic(source.Token);
             Console.ReadLine();
         }
