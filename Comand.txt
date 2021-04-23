@@ -1,0 +1,40 @@
+
+//CORRE EL CONTENEDOR CON Y ASIGNA LA RED PARA QUE SE VINCULE CON EL CONTENEDOR KAFKA
+
+//CONTAINER ORDENES
+docker run --network=kafka -it --name=orders orders
+
+//CONATINER COSTUMER
+
+docker run --network=kafka -it --name=costumer costumer
+
+//COMANDO BASICOS
+--Corre un contenedor
+docker run -t 'nombre_iamgen' --name='nombre_container'
+
+--lista las imagenes creadas
+docker images 
+
+--eliminar una imagen
+docker image rm 'nombre_imagen'
+
+--muestra los contenedores corriendo
+docker ps
+
+--crea una red
+docker network create 'nombre_red'
+
+--eliminar una red
+docker network rm 'nombre_red'
+
+--lista las redes
+docker network ls
+
+--DOCKER-COMPOSE
+--corre un docker compose(tiene que estar ubicada 
+en la carpeta donde se encuentra el archivo con extensio yml)
+
+docker-compose up 
+
+--contruye un docker-compose
+docker-compose build

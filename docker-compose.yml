@@ -1,20 +1,31 @@
-version: '3.9'
+version: '3'
 services:
   zookeeper:
-    image: wurstmeister/zookeeper:3.4.6
+    image: confluentinc/cp-zookeeper:5.5.4
+    container_name: zookeeper
     hostname: zookeeper
     ports:
       - "2181:2181"
-
+    networks: 
+      - default
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: wurstmeister/kafka:2.13-2.7.0
+    image: confluentinc/cp-kafka:5.5.4
+    container_name: kafka
+    depends_on:
+      - zookeeper
     hostname: kafka
     ports:
       - "9092:9092"
-      - "29092:29092"
+    expose:
+        - "29092"
     links: 
       - zookeeper
+    networks: 
+      - default
     environment:
 
 
@@ -28,16 +39,17 @@ services:
       #KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       #KAFKA_INTER_BROKER_LISTENER_NAME: OUTSIDE
 
-      #KAFKA_BROKER_ID: 1
+      KAFKA_BROKER_ID: 1
       KAFKA_ADVERTISED_HOST_NAME: kafka #127.0.0.1
       KAFKA_CREATE_TOPICS: "order:1:1"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
-      KAFKA_LISTENERS: INTERNAL://:29092,EXTERNAL://:9092
-      KAFKA_INTER_BROKER_LISTENER_NAME: EXTERNAL
       
-      #KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     volumes:
         - /var/run/docker.sock:/var/run/docker.sock
   costumer:
@@ -45,26 +57,22 @@ services:
       context: .
       dockerfile: Costumer/Dockerfile
     image: costumer:latest
-    links: 
-     - kafka
+    networks: 
+      - default
     environment:
       ASPNETCORE_ENVIRONMENT: docker
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
-      KAFKA_INTER_BROKER_LISTENER_NAME: EXTERNAL
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181 
   orders:
     build: 
       context: .
       dockerfile: Orders/Dockerfile
     image: orders:latest
-    links: 
-     - kafka
+    networks: 
+      - default
     environment:
       ASPNETCORE_ENVIRONMENT: docker
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: EXTERNAL
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181 
       #GROUP_ID: docker-group
       #AUTO_OFFSET_RESET: largest
+networks:  
+  default:  
+    external:  
+      name: kafka
